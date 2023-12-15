@@ -34,6 +34,7 @@ class Sb3ProductCompositeApplicationTests {
 
     @Autowired
     WebTestClient client;
+
     @MockBean
     private ProductCompositeIntegration productCompositeIntegration;
 
