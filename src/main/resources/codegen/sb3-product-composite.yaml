@@ -1,0 +1,139 @@
+openapi: 3.0.3
+info:
+  title: sb3-product-composite
+  description: sb3-product-composite
+  version: 1.0.0
+paths:
+  /v1/product-composite/{productId}:
+    get:
+      tags:
+        - ProductCompositeService
+      operationId: getByProductId
+      description: retrieve the product by productId
+      parameters:
+        - in: path
+          name: productId
+          required: true
+          schema:
+            type: integer
+      responses:
+        200:
+          description: product retrieved
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductComposite'
+        400:
+          description: bad request
+        404:
+          description: not found
+        422:
+          description: unprocessable entity
+    delete:
+      tags:
+        - ProductCompositeService
+      operationId: deleteByProductId
+      description: delete everything related to a specific product id
+      parameters:
+        - in: path
+          name: productId
+          required: true
+          schema:
+            type: integer
+      responses:
+        202:
+          description: product deletion accpeted
+        400:
+          description: bad request
+        422:
+          description: unprocessable entity
+  /v1/product-composite:
+    post:
+      tags:
+        - ProductCompositeService
+      operationId: createProduct
+      description: create a composite product
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProductComposite'
+      responses:
+        202:
+          description: creation for a composite product accepted
+        400:
+          description: bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HttpErrorInfo'
+        422:
+          description: unprocessable request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HttpErrorInfo'
+
+components:
+  schemas:
+    ProductComposite:
+      type: object
+      properties:
+        product:
+          $ref: '#/components/schemas/Product'
+        recommendations:
+          type: array
+          items:
+            $ref: '#/components/schemas/Recommendation'
+        serviceAddress:
+          $ref: '#/components/schemas/ServiceAddresses'
+    Product:
+      type: object
+      properties:
+        productId:
+          type: integer
+        name:
+          type: string
+        weight:
+          type: integer
+        serviceAddress:
+          type: string
+    Recommendation:
+      type: object
+      properties:
+        recommendationId:
+          type: integer
+        productId:
+          type: integer
+        rate:
+          type: integer
+        content:
+          type: string
+        author:
+          type: string
+        serviceAddress:
+          type: string
+    ServiceAddresses:
+      type: object
+      properties:
+        cmp:
+          type: string
+        pro:
+          type: string
+        rev:
+          type: string
+        rec:
+          type: string
+    HttpErrorInfo:
+      type: object
+      properties:
+        httpStatus:
+          type: string
+        path:
+          type: string
+        message:
+          type: string
+
+
+
+  

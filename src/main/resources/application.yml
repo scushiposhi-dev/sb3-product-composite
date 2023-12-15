@@ -1,0 +1,71 @@
+spring.application.name: product-composite
+server:
+  port: 7000
+  error:
+    include-message: always
+
+app.eureka-server: localhost
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://${app.eureka-server}:8761/eureka/
+    initialInstanceInfoReplicationIntervalSeconds: 5
+    registryFetchIntervalSeconds: 5
+  instance:
+    leaseRenewalIntervalInSeconds: 5
+    leaseExpirationDurationInSeconds: 5
+
+#app:
+#  threadPoolSize: 10
+#  taskQueueSize: 100
+#  product-service:
+#    host: localhost
+#    port: 7001
+#  recommendation-service:
+#    host: localhost
+#    port: 7002
+#  review-service:
+#    host: localhost
+#    port: 7003
+
+spring.cloud.stream:
+  defaultBinder: kafka
+  default.contentType: application/json
+  bindings:
+    products-out-0:
+      destination: products
+      producer:
+        partition-key-expression: headers['partitionKey']
+        partition-count: 2
+        required-groups: auditGroup
+    recommendations-out-0:
+      destination: recommendations
+      producer:
+        partition-key-expression: headers['partitionKey']
+        partition-count: 2
+        required-groups: auditGroup
+#    reviews-out-0:
+#      destination: reviews
+#      producer:
+#        partition-key-expression: headers['partitionKey']
+#        partition-count: 2
+#        required-groups: auditGroup
+
+spring.cloud.stream.kafka.binder:
+  autoAddPartitions: true
+  brokers: 127.0.0.1
+  defaultBrokerPort: 9092
+spring.kafka.bootstrap-servers: kafka:9092
+
+springdoc:
+  show-actuator: true
+  swagger-ui.path: /openapi/swagger-ui.html
+  api-docs.path: /openapi/api-docs
+
+logging:
+  level:
+    root: INFO
+    com.example: DEBUG
+
+management.endpoint.health.show-details: "ALWAYS"
+management.endpoints.web.exposure.include: "*"
